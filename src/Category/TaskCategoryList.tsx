@@ -47,6 +47,7 @@ export default function TaskCategoryList() {
     fetchCategories();
   }, []);
 
+  const [categoryName, setCategoryName] = useState("");
   const fetchCategories = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -56,10 +57,15 @@ export default function TaskCategoryList() {
         },
       });
       setCategories(response.data.categories);
+      if (categories.length > 0) {
+        const firstCategory = categories[0];
+        setCategoryName(firstCategory.name);
+      }
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(categoryName)
 
   //カテゴリーで絞ったタスクの取得
   useEffect(() => {
@@ -76,6 +82,7 @@ export default function TaskCategoryList() {
         },
       });
       setTasks(response.data.tasks);
+      console.log(response.data.tasks);
     } catch (error) {
       console.log(error);
     }
@@ -195,7 +202,7 @@ export default function TaskCategoryList() {
         </Grid>
         {selectedTask && (
           <Grid item xs={5} md={5} sx={{ justifyContent: 'center' }}>
-            <TaskDtail task={selectedTask} />
+            <TaskDtail task={selectedTask} categoryName={categoryName}/>
           </Grid>
         )}
       </Grid>

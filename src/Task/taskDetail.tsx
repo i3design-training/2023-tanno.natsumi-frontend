@@ -1,10 +1,4 @@
-import {
-  Box,
-  Button,
-  Modal,
-  Paper,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Modal, Paper, Typography } from '@mui/material';
 import Layout from '../layout/Layout';
 import { useState } from 'react';
 import EditTask from './EditTask';
@@ -19,9 +13,10 @@ interface Task {
 
 type TaskDetailProps = {
   task: Task;
+  categoryName?: string;
 };
 
-export default function TaskDtail({ task }: TaskDetailProps) {
+export default function TaskDtail({ task, categoryName }: TaskDetailProps) {
   //モーダルの開閉
   const [open, setOpen] = useState(false);
   const handleOpenModal = () => {
@@ -92,7 +87,7 @@ export default function TaskDtail({ task }: TaskDetailProps) {
               color="text.secondary"
               sx={{ flex: '1 1 auto', marginLeft: '16px' }}
             >
-              {task.category_id}
+              {categoryName}
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', marginTop: '20px' }}>
