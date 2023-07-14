@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, TextField, Typography } from '@mui/material';
 import Layout from '../layout/Layout';
 import { Fragment, useEffect, useState } from 'react';
 import { MuiFileInput } from 'mui-file-input';
@@ -7,19 +7,17 @@ const ProfileDetail = () => {
   const [file, setFile] = useState<File | undefined>();
   const [preview, setPreview] = useState<string | undefined>();
 
-  //ファイルhandleChange関数
-  const handleChangeFile = (newFile: File | null) => {
-    if (newFile) {
-      setFile(newFile);
-    }
-  };
-
   //メモリ内のBLOBにアクセスするためのURL生成
   useEffect(() => {
     if (file) {
       setPreview(URL.createObjectURL(file));
     }
   }, [file]);
+
+  const [image, setImage] = useState<File | null>(null);
+  const handleChangeImage = (value: File | null) => {
+    setImage(value);
+  };
 
   return (
     <>
@@ -72,41 +70,21 @@ const ProfileDetail = () => {
               <Typography sx={{ fontSize: '14px' }}>
                 プロフィール画像
               </Typography>
-              <MuiFileInput
-                value={file}
-                onChange={handleChangeFile}
-                variant="outlined"
-              />
-              {file &&
-                !(file.type === 'image/png' || file.type === 'image/jpeg') && (
-                  <Typography
-                    variant="caption"
-                    component="div"
-                    color="error.main"
-                    gutterBottom
-                  >
-                    このファイルタイプはサポートしていません。
-                  </Typography>
+
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {image ? (
+                  <Avatar
+                    src={URL.createObjectURL(image)}
+                    sx={{ width: 100, height: 100, marginRight: '40px' }}
+                  />
+                ) : (
+                  <MuiFileInput
+                    inputProps={{ type: 'file', accept: 'image/*' }}
+                    onChange={handleChangeImage}
+                    sx={{ width: '130px' }}
+                  />
                 )}
-              {file &&
-                (file.type === 'image/png' || file.type === 'image/jpeg') && (
-                  <Fragment>
-                    <Typography
-                      variant="caption"
-                      component="div"
-                      mt={1}
-                      gutterBottom
-                    >
-                      送信画像プレビュー
-                    </Typography>
-                    <img
-                      id="preview"
-                      src={preview}
-                      alt="preview"
-                      className="previewimg"
-                    />
-                  </Fragment>
-                )}
+              </Box>
             </Box>
           </Box>
           <Box

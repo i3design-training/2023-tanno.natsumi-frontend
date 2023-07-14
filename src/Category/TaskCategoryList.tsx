@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import CreateTask from '../Task/CreateTask';
+import { useLocation, useParams } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import TaskDtail from '../Task/taskDetail';
 
@@ -26,13 +27,39 @@ interface Category {
   name: string;
 }
 
-export default function TaskList() {
+export default function TaskCategoryList() {
+  //カテゴリーIDを受け取る
+  const location = useLocation();
+  const [state, setState] = useState(false);
+  const dismiss = () => setState((prevState) => prevState && false);
+  type IdState = { message: string };
+  const idstate = location.state as IdState;
+  const categoryId = idstate.message;
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
 
   const http = axios.create({
     baseURL: 'http://localhost:8000',
   });
+  //カテゴリーの取得
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const response = await http.get('/api/categories', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCategories(response.data.categories);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //カテゴリーで絞ったタスクの取得
   useEffect(() => {
@@ -42,17 +69,12 @@ export default function TaskList() {
 
   const fetchTasks = async () => {
     setUserId(localStorage.getItem('user_id'));
-    const token = localStorage.getItem('token');
     try {
-      const response = await http.get('/api/tasks', {
+      const response = await http.get('/api/categorytask', {
         headers: {
-          Authorization: `Bearer ${token}`,
+          category_id: categoryId,
         },
       });
-      if (!response.data.tasks) {
-        window.location.href = '/login';
-        return;
-      }
       setTasks(response.data.tasks);
     } catch (error) {
       console.log(error);
@@ -91,7 +113,10 @@ export default function TaskList() {
               variant="h4"
               sx={{ fontWeight: '700', display: 'flex' }}
             >
-              全て
+              {categoryId
+                ? categories.find((category) => category.id === categoryId)
+                    ?.name
+                : '全て'}
             </Typography>
             <Button
               variant="contained"
@@ -113,6 +138,7 @@ export default function TaskList() {
                 <CreateTask
                   onClose={handleCloseModal}
                   userId={userId}
+                  categoryID={categoryId}
                   fetchTasks={fetchTasks}
                 />
               </Box>

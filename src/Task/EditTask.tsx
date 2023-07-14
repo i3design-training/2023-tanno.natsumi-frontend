@@ -7,29 +7,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import Layout from '../layout/Layout';
+import { useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import axios from 'axios';
 
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface CreateTaskProps {
+interface EditTaskProps {
   onClose: () => void;
-  userId?: string | null;
-  categoryID?: string;
-  fetchTasks: () => void;
 }
-export default function CreateTask({
-  onClose,
-  fetchTasks,
-  userId,
-  categoryID,
-}: CreateTaskProps) {
+
+export default function EditTask({ onClose }: EditTaskProps) {
+
   //タイトルを格納
   const [taskTitle, setTaskTitle] = useState<string>('');
   const handleChangeTaskTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,8 +26,9 @@ export default function CreateTask({
   };
 
   //カテゴリの選択
-  // カテゴリIDの初期値を空文字列に設定
-  const [category, setCategory] = useState<string>(categoryID || '');
+  //データベースから取ってきたデータをこの配列に入れたい。
+  const categoruList: string[] = ['仕事', 'プライベート', '今年中'];
+  const [category, setCategory] = useState<string>('');
   const handleChange = (event: SelectChangeEvent<string>) => {
     setCategory(event.target.value);
   };
@@ -48,55 +38,14 @@ export default function CreateTask({
   const handleChangeDeadline = (date: Date | null) => {
     setDeadline(date);
   };
+  console.log(deadline);
 
   //タスク詳細を格納
   const [taskDetail, setTaskDetail] = useState<string>('');
   const handleChangeTaskDetail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTaskDetail(e.target.value);
   };
-
-  const taskData = {
-    title: taskTitle,
-    user_id: userId,
-    category_id: category,
-    description: taskDetail,
-    due_date: deadline,
-  };
-
-  const http = axios.create({
-    baseURL: 'http://localhost:8000',
-  });
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  //メニューにカテゴリの名前を入れるため
-  const [categories, setCategories] = useState<Category[]>([]);
-  const fetchCategories = async () => {
-    const token = localStorage.getItem('token');
-    try {
-      const response = await http.get('/api/categories', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCategories(response.data.categories);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const createTask = async () => {
-    try {
-      const response = await http.post('/api/task', taskData);
-      console.log(response.data);
-      onClose();
-      fetchTasks();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  console.log(taskDetail);
 
   return (
     <>
@@ -115,8 +64,8 @@ export default function CreateTask({
         }}
       >
         <Box>
-          <Typography sx={{ fontSize: '20px', marginTop: '50px' }}>
-            タスク作成
+          <Typography sx={{ fontSize: '20px', marginTop: '20px' }}>
+            タスクを編集
           </Typography>
         </Box>
         <Box
@@ -127,7 +76,7 @@ export default function CreateTask({
             alignItems: 'center',
           }}
         >
-          <Box sx={{ width: '600px', marginTop: '50px' }}>
+          <Box sx={{ width: '500px', marginTop: '10px' }}>
             <Box
               sx={{
                 display: 'flex',
@@ -156,7 +105,7 @@ export default function CreateTask({
                 カテゴリ
               </Typography>
               <Select
-                placeholder={'select category...'}
+                placeholder="select category..."
                 displayEmpty
                 value={category}
                 onChange={handleChange}
@@ -166,18 +115,17 @@ export default function CreateTask({
                   lineHeight: '170%',
                 }}
               >
-                {categories.map((category) => (
+                {categoruList.map((category) => (
                   <MenuItem
-                    key={category.id}
-                    value={category.id}
-                    defaultValue={category.id}
+                    key={category}
+                    value={category}
                     sx={{
                       fontWeight: '400',
                       fontSize: '14px',
                       lineHeight: '170%',
                     }}
                   >
-                    {category.name}
+                    {category}
                   </MenuItem>
                 ))}
               </Select>
@@ -219,9 +167,7 @@ export default function CreateTask({
             flexDirection="column"
             sx={{ width: '120px', marginTop: '50px', alignItems: 'center' }}
           >
-            <Button variant="contained" color="secondary" onClick={createTask}>
-              作成
-            </Button>
+            <Button color="secondary">編集</Button>
             <Button onClick={onClose}>キャンセル</Button>
           </Box>
         </Box>
