@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import axios from 'axios';
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 
 interface Category {
   id: string;
@@ -77,6 +78,17 @@ export default function Category() {
     }
   };
 
+  const deleteCategory = async (categoryId: string) => {
+    
+    console.log(categoryId);
+    try {
+      await http.delete(`/api/category/${categoryId}`);
+      fetchCategories();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout>
       <Box sx={{ marginTop: '50px' }}>
@@ -94,46 +106,62 @@ export default function Category() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            position: 'relative',
           }}
         >
           {categories.map((category, index) => (
-            <Card
-              key={index}
+            <Box
+              key={category.id}
               sx={{
-                marginTop: '50px',
-                minWidth: '500px',
-                background: '#FFF',
-                //borderBottom: '2px solid #EFD5C3',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
               }}
             >
-              <CardActionArea
-                onClick={() => {
-                  navigate('/categorytask', {
-                    state: { message: category.id },
-                  });
+              <Card
+                sx={{
+                  marginTop: '50px',
+                  minWidth: '500px',
+                  background: '#FFF',
                 }}
               >
-                <CardContent>
-                  <Typography
-                    gutterBottom
-                    variant="h6"
-                    component="div"
-                    sx={{
-                      fontWeight: '700',
-                      display: 'flex',
-                      alignItems: 'center',
-                      textAlign: 'center',
-                      paddingLeft: '8px',
-                    }}
-                  >
-                    {category.name}
+                <CardActionArea
+                  onClick={() => {
+                    navigate('/categorytask', {
+                      state: { message: category.id },
+                    });
+                  }}
+                >
+                  <CardContent>
+                    <Typography
+                      gutterBottom
+                      variant="h6"
+                      component="div"
+                      sx={{
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        paddingLeft: '8px',
+                      }}
+                    >
+                      {category.name}
+                    </Typography>
+                  </CardContent>
+                  <Typography color="secondary">
+                    {category.name}タスク一覧を見る→
                   </Typography>
-                </CardContent>
-                <Typography color="secondary">
-                  {category.name}タスク一覧を見る→
-                </Typography>
-              </CardActionArea>
-            </Card>
+                </CardActionArea>
+              </Card>
+              <IconButton
+                onClick={() => deleteCategory(category.id)}
+                sx={{
+                  marginLeft: '8px',
+                }}
+              >
+                <DeleteForeverRoundedIcon color="primary" />
+              </IconButton>
+            </Box>
           ))}
         </Box>
       </Box>
