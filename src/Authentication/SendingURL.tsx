@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import Layout2 from '../layout/Layout2';
+import Layout2 from '../layouts/Layout2';
 import { Box } from '@mui/system';
 
 const SendingURL = () => {

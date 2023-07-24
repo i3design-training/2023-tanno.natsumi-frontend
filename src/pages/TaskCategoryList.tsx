@@ -10,10 +10,10 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import CreateTask from '../Task/CreateTask';
+import CreateTask from '../organisms/CreateTask';
 import { useLocation, useParams } from 'react-router-dom';
-import Layout from '../layout/Layout';
-import TaskDtail from '../Task/taskDetail';
+import Layout from '../layouts/Layout';
+import TaskDtail from '../organisms/taskDetail';
 
 interface Task {
   id: string;
@@ -47,7 +47,7 @@ export default function TaskCategoryList() {
     fetchCategories();
   }, []);
 
-  const [categoryName, setCategoryName] = useState("");
+  const [categoryName, setCategoryName] = useState('');
   const fetchCategories = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -65,7 +65,7 @@ export default function TaskCategoryList() {
       console.log(error);
     }
   };
-  console.log(categoryName)
+  console.log(categoryName);
 
   //カテゴリーで絞ったタスクの取得
   useEffect(() => {
@@ -202,7 +202,7 @@ export default function TaskCategoryList() {
         </Grid>
         {selectedTask && (
           <Grid item xs={5} md={5} sx={{ justifyContent: 'center' }}>
-            <TaskDtail task={selectedTask} categoryName={categoryName}/>
+            <TaskDtail task={selectedTask} categoryName={categoryName} />
           </Grid>
         )}
       </Grid>

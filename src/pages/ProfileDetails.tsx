@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material';
-import Layout from '../layout/Layout';
+import Layout from '../layouts/Layout';
 import { Fragment, useEffect, useState } from 'react';
 import { MuiFileInput } from 'mui-file-input';
 
