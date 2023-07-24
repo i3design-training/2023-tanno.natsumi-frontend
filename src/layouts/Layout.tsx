@@ -1,16 +1,12 @@
 import {
   AppBar,
-  Avatar,
   Box,
-  Button,
   Container,
-  Menu,
-  MenuItem,
   ThemeProvider,
-  Typography,
   createTheme,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import HeaderButton from '../molecules/layout/HeaderButton';
+import HeaderAvatorMenu from '../molecules/layout/HeaderAvatorMenue';
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -42,11 +38,24 @@ const apptheme = createTheme({
   },
 });
 
+const textStyle = {
+  fontFamily: 'Noto Sans',
+  fontStyle: 'normal',
+  fontSize: '17px',
+};
+
 export default function Layout({ children }: LayoutProps) {
   return (
     <ThemeProvider theme={apptheme}>
       <Container>
-        <AppBar sx={{ height: '40px', display: 'flex' }}></AppBar>
+        <AppBar sx={{ height: '40px', display: 'flex' }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}
+          >
+            <HeaderButton />
+            <HeaderAvatorMenu />
+          </Box>
+        </AppBar>
         {children}
       </Container>
     </ThemeProvider>
