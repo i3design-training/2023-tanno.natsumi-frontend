@@ -1,7 +1,7 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import axios from 'axios';
-import Layout2 from '../layouts/Layout2';
+import Layout2 from '../../layouts/Layout2';
 
 const Complete = () => {
   const http = axios.create({

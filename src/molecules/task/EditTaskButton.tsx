@@ -2,8 +2,9 @@ import { Button, Modal } from '@mui/material';
 import { Box } from '@mui/system';
 import EditTask from '../../organisms/EditTask';
 import { useState } from 'react';
+import ActionButton from '../../atoms/ActionButton';
 
-export function TaskActionButtons() {
+export default function EditTaskButton() {
   //モーダルの開閉
   const [open, setOpen] = useState(false);
   const handleOpenModal = () => {
@@ -15,14 +16,7 @@ export function TaskActionButtons() {
 
   return (
     <Box sx={{ width: '130px' }}>
-      <Button
-        onClick={handleOpenModal}
-        variant="contained"
-        color="secondary"
-        sx={{ marginBottom: '8px' }}
-      >
-        編集する
-      </Button>
+      <ActionButton onClick={handleOpenModal} buttonName={'編集する'} />
       <Modal open={open}>
         <Box
           sx={{

@@ -1,6 +1,7 @@
 import { Box } from '@mui/system';
-import DeleteCategory from '../atoms/DeleteCategory';
-import CategoryTaskCard from '../molecules/category/CategoryTaskCard';
+import CategoryTaskCard from './CategoryCardCompornent';
+import DeleteButton from '../atoms/DeleteButton';
+import axios from 'axios';
 
 interface Category {
   id: string;
@@ -16,6 +17,19 @@ export default function CategoryCard({
   categories,
   fetchCategories,
 }: CategoryProps) {
+  const http = axios.create({
+    baseURL: 'http://localhost:8000',
+  });
+  const deleteCategory = async (categoryId: string) => {
+    console.log(categoryId);
+    try {
+      await http.delete(`/api/category/${categoryId}`);
+      fetchCategories();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {categories.map((category) => (
@@ -28,10 +42,7 @@ export default function CategoryCard({
             categoryId={category.id}
             categoryName={category.name}
           />
-          <DeleteCategory
-            categoryId={category.id}
-            fetchCategories={fetchCategories}
-          />
+          <DeleteButton onClick={deleteCategory} />
         </Box>
       ))}
     </>

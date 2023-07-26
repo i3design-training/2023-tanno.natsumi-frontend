@@ -1,13 +1,13 @@
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './Authentication/Login';
-import Registration from './Authentication/Registration';
-import SendingURL from './Authentication/SendingURL';
 import ProfileDetail from './pages/ProfileDetails';
-import Complete from './Authentication/Complete';
 import Category from './pages/Category';
 import TaskCategoryList from './pages/TaskCategoryList';
 import TaskList from './pages/TaskList';
+import Login from './pages/Authentication/Login';
+import Registration from './pages/Authentication/Registration';
+import SendingURL from './pages/Authentication/SendingURL';
+import Complete from './pages/Authentication/Complete';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,

@@ -2,8 +2,9 @@ import { Box, Typography } from '@mui/material';
 import Layout from '../layouts/Layout';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import CreateCategory from '../molecules/category/CreateCategory';
+import CreateCategory from '../molecules/category/TextInputWithCreateButton';
 import CategoryCard from '../organisms/CategoryCard';
+import Title from '../atoms/Title';
 
 interface Category {
   id: string;
@@ -43,19 +44,41 @@ export default function Category() {
     }
   };
 
+  //新規カテゴリ作成の入力
+  const [categoryText, setCategoryText] = useState('');
+  const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCategoryText(e.target.value);
+  };
+
+  const categoryData = {
+    name: categoryText,
+    user_id: userId,
+  };
+  const createCategory = async () => {
+    try {
+      const response = await http.post('/api/category', categoryData);
+      console.log(response.data);
+      setCategoryText('');
+      fetchCategories();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout>
       <Box sx={{ marginTop: '50px' }}>
-        <Typography variant="h4" sx={{ fontWeight: '700', display: 'flex' }}>
-          カテゴリーリスト
-        </Typography>
-        <CreateCategory fetchCategories={fetchCategories} userId={userId} />
+        <Title title={'カテゴリ一覧'} />
+        <CreateCategory
+          handleChangeText={handleChangeText}
+          onClick={createCategory}
+        />
         <Box
           sx={{
+            marginTop: '50px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            position: 'relative',
           }}
         >
           <CategoryCard

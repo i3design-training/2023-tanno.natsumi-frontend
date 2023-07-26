@@ -1,7 +1,8 @@
 import { Button, Modal } from '@mui/material';
 import { Box } from '@mui/system';
-import CreateTask from '../organisms/CreateTask';
+import CreateTask from '../../organisms/CreateTask';
 import { useState } from 'react';
+import ActionButton from '../../atoms/ActionButton';
 
 interface CreateTaskButtonProps {
   userId: string | null;
@@ -23,14 +24,7 @@ export default function CreateTaskButton({
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="secondary"
-        sx={{ ml: 'auto' }}
-        onClick={handleOpenModal}
-      >
-        タスクを追加する
-      </Button>
+      <ActionButton onClick={handleOpenModal} buttonName="タスク作成" />
       <Modal open={open}>
         <Box
           sx={{
@@ -40,11 +34,16 @@ export default function CreateTaskButton({
             transform: 'translate(-50%, -50%)',
           }}
         >
-          <CreateTask
+              <CreateTask
             onClose={handleCloseModal}
             userId={userId}
             fetchTasks={fetchTasks}
           />
+          {/* <CreateTask
+            onClose={handleCloseModal}
+            userId={userId}
+            fetchTasks={fetchTasks}
+          /> */}
         </Box>
       </Modal>
     </>

@@ -2,9 +2,10 @@ import { Box, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Layout from '../layouts/Layout';
-import CreateTaskButton from '../atoms/CreateTaskButton';
+import CreateTaskButton from '../molecules/task/CreateTaskButton';
 import TaskCard from '../organisms/TaskCard';
-import TaskDetail from '../organisms/taskDetail';
+import TaskDetail from '../organisms/TaskDetail';
+import Title from '../atoms/Title';
 
 interface Task {
   id: string;
@@ -46,6 +47,8 @@ export default function TaskList() {
     }
   };
 
+  console.log(tasks)
+
   return (
     <Layout>
       <Grid container spacing={2}>
@@ -59,12 +62,7 @@ export default function TaskList() {
           }}
         >
           <Box sx={{ marginTop: '50px' }}>
-            <Typography
-              variant="h4"
-              sx={{ fontWeight: '700', display: 'flex' }}
-            >
-              全て
-            </Typography>
+            <Title title='タスク一覧'/>
             <CreateTaskButton userId={userId} fetchTasks={fetchTasks} />
             <Box
               sx={{

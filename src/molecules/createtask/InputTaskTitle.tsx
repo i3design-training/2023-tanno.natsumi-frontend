@@ -4,7 +4,7 @@ import { Box } from '@mui/system';
 interface TitleProps {
   setTaskTitle: React.Dispatch<React.SetStateAction<string>>;
 }
-export default function Title({ setTaskTitle }: TitleProps) {
+export default function InputTaskTitle({ setTaskTitle }: TitleProps) {
   const handleChangeTaskTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTaskTitle(e.target.value);
   };
