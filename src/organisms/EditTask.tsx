@@ -1,50 +1,54 @@
-import {
-  Box,
-  Button,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import axios from 'axios';
+import SelectCategory from '../molecules/createtask/SelectCategory';
+import SelectDoeDate from '../molecules/createtask/SelectDoeDate';
+import TaskDetail from '../molecules/createtask/InputTaskDescription';
+import ActionButton from '../atoms/ActionButton';
+import InputTaskTitle from '../molecules/createtask/InputTaskTitle';
+import Title from '../atoms/Title';
 
-interface EditTaskProps {
+interface CreateTaskProps {
   onClose: () => void;
+  userId?: string | null;
+  categoryID?: string;
+  fetchTasks: () => void;
 }
-
-export default function EditTask({ onClose }: EditTaskProps) {
-
+export default function CreateTask({
+  onClose,
+  fetchTasks,
+  userId,
+  categoryID,
+}: CreateTaskProps) {
   //タイトルを格納
   const [taskTitle, setTaskTitle] = useState<string>('');
-  const handleChangeTaskTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTaskTitle(e.target.value);
-  };
-
   //カテゴリの選択
-  //データベースから取ってきたデータをこの配列に入れたい。
-  const categoruList: string[] = ['仕事', 'プライベート', '今年中'];
-  const [category, setCategory] = useState<string>('');
-  const handleChange = (event: SelectChangeEvent<string>) => {
-    setCategory(event.target.value);
-  };
-
+  const [category, setCategory] = useState<string>(categoryID || '');
   //期限を格納
   const [deadline, setDeadline] = useState<Date | null>(null);
-  const handleChangeDeadline = (date: Date | null) => {
-    setDeadline(date);
-  };
-  console.log(deadline);
-
   //タスク詳細を格納
   const [taskDetail, setTaskDetail] = useState<string>('');
-  const handleChangeTaskDetail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTaskDetail(e.target.value);
+
+  const taskData = {
+    title: taskTitle,
+    user_id: userId,
+    category_id: category,
+    description: taskDetail,
+    due_date: deadline,
   };
-  console.log(taskDetail);
+  const http = axios.create({
+    baseURL: 'http://localhost:8000',
+  });
+  const createTask = async () => {
+    try {
+      const response = await http.post('/api/task', taskData);
+      console.log(response.data);
+      onClose();
+      fetchTasks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -63,9 +67,7 @@ export default function EditTask({ onClose }: EditTaskProps) {
         }}
       >
         <Box>
-          <Typography sx={{ fontSize: '20px', marginTop: '20px' }}>
-            タスクを編集
-          </Typography>
+          <Title title={'タスク作成'} />
         </Box>
         <Box
           sx={{
@@ -75,98 +77,24 @@ export default function EditTask({ onClose }: EditTaskProps) {
             alignItems: 'center',
           }}
         >
-          <Box sx={{ width: '500px', marginTop: '10px' }}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Typography sx={{ fontSize: '14px', alignItems: 'center' }}>
-                タイトル
-              </Typography>
-              <TextField
-                variant="standard"
-                sx={{ width: '400px' }}
-                onChange={handleChangeTaskTitle}
-              />
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: '50px',
-              }}
-            >
-              <Typography sx={{ fontSize: '14px', alignItems: 'center' }}>
-                カテゴリ
-              </Typography>
-              <Select
-                placeholder="select category..."
-                displayEmpty
-                value={category}
-                onChange={handleChange}
-                style={{
-                  fontWeight: '400',
-                  fontSize: '14px',
-                  lineHeight: '170%',
-                }}
-              >
-                {categoruList.map((category) => (
-                  <MenuItem
-                    key={category}
-                    value={category}
-                    sx={{
-                      fontWeight: '400',
-                      fontSize: '14px',
-                      lineHeight: '170%',
-                    }}
-                  >
-                    {category}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginTop: '50px',
-                alignItems: 'center',
-              }}
-            >
-              <Typography sx={{ fontSize: '14px' }}>期限</Typography>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker value={deadline} onChange={handleChangeDeadline} />
-              </LocalizationProvider>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginTop: '50px',
-                alignItems: 'center',
-              }}
-            >
-              <Typography sx={{ fontSize: '14px' }}>タスク詳細</Typography>
-              <TextField
-                multiline
-                rows={4}
-                placeholder="タスクの詳細を記入してください"
-                variant="standard"
-                sx={{ width: '400px' }}
-                onChange={handleChangeTaskDetail}
-              />
-            </Box>
+          <Box
+            sx={{
+              Maxwidth: '600px',
+              marginTop: '50px',
+              justifyContent: 'space-between',
+            }}
+          >
+            <InputTaskTitle setTaskTitle={setTaskTitle} />
+            <SelectCategory setCategory={setCategory} category={category} />
+            <SelectDoeDate setDeadline={setDeadline} deadline={deadline} />
+            <TaskDetail setTaskDetail={setTaskDetail} />
           </Box>
           <Box
             display="flex"
             flexDirection="column"
             sx={{ width: '120px', marginTop: '50px', alignItems: 'center' }}
           >
-            <Button color="secondary">編集</Button>
+            <ActionButton onClick={createTask} buttonName={'作成する'} />
             <Button onClick={onClose}>キャンセル</Button>
           </Box>
         </Box>

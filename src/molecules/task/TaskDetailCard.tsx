@@ -1,7 +1,7 @@
 // モレキュール
 import { Paper } from '@mui/material';
 import { TaskTitle } from '../../atoms/taskDetail/TaskTitle';
-import { TaskDescription } from '../../atoms/taskDetail/TaskDescription';
+import { TaskDescription } from './TaskDescription';
 
 interface Task {
   id: string;
@@ -16,7 +16,7 @@ interface TaskDetailsCardProps {
   categoryName?: string | undefined;
 }
 
-export function TaskDetailsCard({ task, categoryName }: TaskDetailsCardProps) {
+export default function TaskDetailsCard({ task, categoryName }: TaskDetailsCardProps) {
   return (
     <Paper
       color="primary"

@@ -1,23 +1,27 @@
-import { MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+import { Select, SelectChangeEvent, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import SelectMenue from '../../atoms/SelectMenue';
 
 interface Category {
   id: string;
   name: string;
 }
 
-interface SelectCategoryProps{
-  setCategory: React.Dispatch<React.SetStateAction<string>>
+interface SelectCategoryProps {
+  setCategory: React.Dispatch<React.SetStateAction<string>>;
   category: string;
 }
-export default function SelectCategory({setCategory, category}: SelectCategoryProps) {
 
+export default function SelectCategory({
+  setCategory,
+  category,
+}: SelectCategoryProps) {
   const handleChange = (event: SelectChangeEvent<string>) => {
     setCategory(event.target.value);
   };
-  
+
   const http = axios.create({
     baseURL: 'http://localhost:8000',
   });
@@ -26,7 +30,7 @@ export default function SelectCategory({setCategory, category}: SelectCategoryPr
     fetchCategories();
   }, []);
 
-  //メニューにカテゴリの名前を入れるため
+  // メニューにカテゴリの名前を入れるため
   const [categories, setCategories] = useState<Category[]>([]);
   const fetchCategories = async () => {
     const token = localStorage.getItem('token');
@@ -41,6 +45,14 @@ export default function SelectCategory({setCategory, category}: SelectCategoryPr
       console.log(error);
     }
   };
+
+  const categoryNames: string[] = categories.map((category) => category.name);
+
+  const handleMenuItemClick = (index: number) => {
+    // const selectedCategory = categoryNames[index]; // インデックスに応じた選択されたカテゴリを取得
+    // setCategory(selectedCategory);
+  };
+
   return (
     <Box
       sx={{
@@ -63,20 +75,7 @@ export default function SelectCategory({setCategory, category}: SelectCategoryPr
           lineHeight: '170%',
         }}
       >
-        {categories.map((category) => (
-          <MenuItem
-            key={category.id}
-            value={category.id}
-            defaultValue={category.id}
-            sx={{
-              fontWeight: '400',
-              fontSize: '14px',
-              lineHeight: '170%',
-            }}
-          >
-            {category.name}
-          </MenuItem>
-        ))}
+        <SelectMenue list={categories} onClick={handleMenuItemClick} />
       </Select>
     </Box>
   );

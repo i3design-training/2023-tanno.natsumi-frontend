@@ -1,10 +1,12 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import axios from 'axios';
-import Title from '../molecules/createtask/Title';
 import SelectCategory from '../molecules/createtask/SelectCategory';
 import SelectDoeDate from '../molecules/createtask/SelectDoeDate';
 import TaskDetail from '../molecules/createtask/InputTaskDescription';
+import ActionButton from '../atoms/ActionButton';
+import InputTaskTitle from '../molecules/createtask/InputTaskTitle';
+import Title from '../atoms/Title';
 
 interface CreateTaskProps {
   onClose: () => void;
@@ -65,9 +67,7 @@ export default function CreateTask({
         }}
       >
         <Box>
-          <Typography sx={{ fontSize: '20px', marginTop: '50px' }}>
-            タスク作成
-          </Typography>
+          <Title title={'タスク作成'} />
         </Box>
         <Box
           sx={{
@@ -84,7 +84,7 @@ export default function CreateTask({
               justifyContent: 'space-between',
             }}
           >
-            <Title setTaskTitle={setTaskTitle} />
+            <InputTaskTitle setTaskTitle={setTaskTitle} />
             <SelectCategory setCategory={setCategory} category={category} />
             <SelectDoeDate setDeadline={setDeadline} deadline={deadline} />
             <TaskDetail setTaskDetail={setTaskDetail} />
@@ -94,9 +94,7 @@ export default function CreateTask({
             flexDirection="column"
             sx={{ width: '120px', marginTop: '50px', alignItems: 'center' }}
           >
-            <Button variant="contained" color="secondary" onClick={createTask}>
-              作成
-            </Button>
+            <ActionButton onClick={createTask} buttonName={'作成する'} />
             <Button onClick={onClose}>キャンセル</Button>
           </Box>
         </Box>

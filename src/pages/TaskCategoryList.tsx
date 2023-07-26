@@ -1,19 +1,12 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  Grid,
-  Modal,
-  Typography,
-} from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import CreateTask from '../organisms/CreateTask';
 import { useLocation, useParams } from 'react-router-dom';
 import Layout from '../layouts/Layout';
-import TaskDtail from '../organisms/taskDetail';
+import TaskDetail from '../organisms/TaskDetail';
+import Title from '../atoms/Title';
+import CreateTaskButton from '../molecules/task/CreateTaskButton';
+import TaskCard from '../organisms/TaskCard';
 
 interface Task {
   id: string;
@@ -88,20 +81,7 @@ export default function TaskCategoryList() {
     }
   };
 
-  //モーダルの開閉
-  const [open, setOpen] = useState(false);
-  const handleOpenModal = () => {
-    setOpen(true);
-  };
-  const handleCloseModal = () => {
-    setOpen(false);
-  };
-
   const [selectedTask, setSelectedTask] = useState<Task | null>();
-
-  const handleCardClick = (task: Task) => {
-    setSelectedTask(task);
-  };
 
   return (
     <Layout>
@@ -116,40 +96,17 @@ export default function TaskCategoryList() {
           }}
         >
           <Box sx={{ marginTop: '50px' }}>
-            <Typography
-              variant="h4"
-              sx={{ fontWeight: '700', display: 'flex' }}
-            >
-              {categoryId
-                ? categories.find((category) => category.id === categoryId)
+            {categoryId ? (
+              <Title
+                title={
+                  categories.find((category) => category.id === categoryId)
                     ?.name
-                : '全て'}
-            </Typography>
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ ml: 'auto' }}
-              onClick={handleOpenModal}
-            >
-              タスクを追加する
-            </Button>
-            <Modal open={open}>
-              <Box
-                sx={{
-                  position: 'fixed',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              >
-                <CreateTask
-                  onClose={handleCloseModal}
-                  userId={userId}
-                  categoryID={categoryId}
-                  fetchTasks={fetchTasks}
-                />
-              </Box>
-            </Modal>
+                }
+              />
+            ) : (
+              <Title title={'全て'} />
+            )}
+            <CreateTaskButton userId={userId} fetchTasks={fetchTasks} />
             <Box
               sx={{
                 display: 'flex',
@@ -157,52 +114,13 @@ export default function TaskCategoryList() {
                 alignItems: 'center',
               }}
             >
-              {tasks.map((task, index) => (
-                // カードを押したら、task_idでtaskDtailが開くようにする
-                <Card
-                  onClick={() => handleCardClick(task)}
-                  key={index}
-                  sx={{
-                    marginTop: '50px',
-                    minWidth: '500px',
-
-                    background: '#FFF',
-                    borderBottom: '2px solid #EFD5C3',
-                    boxShadow: 'none',
-                    '&:hover': {
-                      background: '#F2DDCF',
-                    },
-                  }}
-                >
-                  <CardActionArea>
-                    <CardContent>
-                      <Typography
-                        gutterBottom
-                        variant="h6"
-                        component="div"
-                        sx={{
-                          fontWeight: '700',
-                          display: 'flex',
-                          alignItems: 'center',
-                          textAlign: 'center',
-                          paddingLeft: '8px',
-                        }}
-                      >
-                        {task.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {task.due_date}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              ))}
+              <TaskCard tasks={tasks} setSelectedTask={setSelectedTask} />
             </Box>
           </Box>
         </Grid>
         {selectedTask && (
           <Grid item xs={5} md={5} sx={{ justifyContent: 'center' }}>
-            <TaskDtail task={selectedTask} categoryName={categoryName} />
+            <TaskDetail task={selectedTask} categoryName={categoryName} />
           </Grid>
         )}
       </Grid>

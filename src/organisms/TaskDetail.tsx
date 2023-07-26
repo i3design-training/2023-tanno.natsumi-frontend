@@ -1,6 +1,5 @@
-import { TaskActionButtons } from '../molecules/task/TaskActionButtons';
-import { TaskDetailsCard } from '../molecules/task/TaskDetailCard';
-import { Box } from '@mui/material';
+import EditTaskButton from '../molecules/task/EditTaskButton';
+import TaskDetailsCard from '../molecules/task/TaskDetailCard';
 
 interface Task {
   id: string;
@@ -19,7 +18,7 @@ export default function TaskDetail({ task, categoryName }: TaskDetailProps) {
   return (
     <>
       <TaskDetailsCard task={task} categoryName={categoryName} />
-      <TaskActionButtons />
+      <EditTaskButton />
     </>
   );
 }

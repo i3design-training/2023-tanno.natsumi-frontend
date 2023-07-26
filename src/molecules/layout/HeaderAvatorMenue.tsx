@@ -1,5 +1,5 @@
 import { Avatar, Button } from '@mui/material';
-import AvatorMenu from '../../atoms/AvatorMenu';
+import AvatorMenu from './AvatorMenu';
 import { useState } from 'react';
 
 export default function HeaderAvatorMenu() {
@@ -12,7 +12,6 @@ export default function HeaderAvatorMenu() {
   };
   return (
     <>
-      <AvatorMenu anchorEl={anchorEl} handleClose={handleClose} />
       <Button
         variant="contained"
         onClick={handleMenu}
@@ -26,6 +25,7 @@ export default function HeaderAvatorMenu() {
       >
         <Avatar />
       </Button>
+      <AvatorMenu anchorEl={anchorEl} handleClose={handleClose} />
     </>
   );
 }
